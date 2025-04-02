@@ -43,7 +43,12 @@ export const signup=async (req,res)=>{
                 }
             });
             const token=generateToken(newUser.id);
-            return res.status(200).json({message:"User created successfully",token:token});
+            return res.status(200).json({message:"User created successfully",token:token,user:{
+                id:newUser.id,
+                username:newUser.username,
+                firstName:newUser.firstName,
+                lastName:newUser.lastName
+            }});
         }
     }catch(e){
         console.log("Error in userController.signup",e.message);
@@ -72,7 +77,12 @@ export const signin=async (req,res)=>{
             const passwordMatch=await bcrypt.compare(password,user.password);
             if(passwordMatch){
                 const token=generateToken(user.id);
-                return res.status(200).json({message:"User signed in successfully",token:token});
+                return res.status(200).json({message:"User signed in successfully",token:token,user:{
+                    id:user.id,
+                    username:user.username,
+                    firstName:user.firstName,
+                    lastName:user.lastName
+                }})
             }else{
                 return res.status(411).json({message:"Incorrect password"});
             }
@@ -142,8 +152,10 @@ export const searchUser=async(req,res)=>{
                 ]
             }
         })
+
+        const filteredUsers=users.filter(user=>user.id!==req.user.id);
         return res.status(200).json({
-            users:users.map(user=>({
+            users:filteredUsers.map(user=>({
                 id:user.id,
                 username:user.username,
                 firstName:user.firstName,
@@ -153,5 +165,16 @@ export const searchUser=async(req,res)=>{
     }catch(e){
         console.log("Error in userController.searchUser",e.message);
         return res.status(500).json({message:"Internal server error"});
+    }
+}
+
+export const refresh=async(req,res)=>{
+    const authHeader=req.headers.authorization;
+    try{
+        const user=req.user;
+        return res.status(200).json({user:user});
+    }catch(e){
+        console.log("Error in userController.refresh",e.message);
+        return res.status(500).json({message:"Intrnal server error"});
     }
 }

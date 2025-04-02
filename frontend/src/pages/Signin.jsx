@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import axiosInstance from "../lib/axiosInstance";
 
 
-const Signin = () => {
+const Signin = ({setAuthUser}) => {
   const [username,setUsername]=useState("");
   const [password,setPassword]=useState("");
   const [loading,setLoading]=useState(false);
@@ -24,6 +24,7 @@ const Signin = () => {
       })
       const token=res.data.token;
       localStorage.setItem("token",token);
+      setAuthUser(res.data.user);
       navigate("/dashboard");
 
     }catch(e){

@@ -7,7 +7,7 @@ import BottomWarning from "../component/BottomWarning";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../lib/axiosInstance";
 
-const Signup = () => {
+const Signup = ({setAuthUser}) => {
   const [firstName,setFirstName]=useState("");
   const [lastName,setLastName]=useState("");
   const [username,setUsername]=useState("");
@@ -27,6 +27,7 @@ const Signup = () => {
       })
       const token=res.data.token;
       localStorage.setItem("token",token);
+      setAuthUser(res.data.user);
       navigate("/dashboard");
     }catch(e){
       console.log(e.response.data.message);

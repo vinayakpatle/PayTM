@@ -3,12 +3,12 @@ import Appbar from "../component/Appbar";
 import Balance from "../component/Balance";
 import Users from "../component/Users";
 
-const Dashboard = () => {
+const Dashboard = ({authUser}) => {
   return (
     <div>
-      <Appbar />
+      <Appbar authUser={authUser} />
       <div className='m-8'>
-        <Balance balance={"10,000"} />
+        <Balance />
         <Users />
       </div>
     </div>
